@@ -6,9 +6,7 @@ const Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = 0;
-    this.y = 0;
-    this.speed = 0;
+    this.reset();
 };
 
 // Update the enemy's position, required method for game
@@ -17,13 +15,39 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    for (const enemy of allEnemies)
-        enemy.x = enemy.speed * dt;
+    for (const enemy of allEnemies) {
+        enemy.x += enemy.speed * dt;
+
+        // Respawn enemy if out of bounds
+        if (enemy.x >= 503)
+            enemy.reset();
+
+        // Detect enemy collision
+        if (Math.abs(enemy.x - player.x) <= 67 && enemy.y === player.y)
+            player.reset();
+    }
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Enemy.prototype.reset = function() {
+    this.x = -103;
+    this.y = (() => {
+        const row = Math.floor(Math.random() * 3); // y position is an integer
+
+        switch(row) {
+            case 0:
+                return 68;
+            case 1:
+                return 151;
+            case 2:
+                return 234;
+        }
+    })(); // execute function immediately and assign this.y to return value
+    this.speed = Math.random() * 100 + 50; // speed is a double
 };
 
 // Now write your own player class
@@ -32,13 +56,10 @@ Enemy.prototype.render = function() {
 class Player {
     constructor() {
         this.sprite = 'images/char-boy.png';
-        this.x = 200;
-        this.y = 400; // bottom center of canvas
+        this.reset();
     }
 
-    update(dt) {
-
-    }
+    update() {}
 
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -48,7 +69,7 @@ class Player {
         switch (dir) {
             // Note: px increases right and down
             case 'left':
-                if (this.x != -2) // left boundary
+                if (this.x !== -2) // left boundary
                     this.x -= 101; // block width = 101px
                 break;
             case 'up':
@@ -56,19 +77,23 @@ class Player {
                 this.y -= 83; // block height = 83px
                 break;
             case 'right':
-                if (this.x != 402) // right boundary
+                if (this.x !== 402) // right boundary
                     this.x += 101;
                 break;
             case 'down':
-                if (this.y != 400) // lower boundary
+                if (this.y !== 400) // lower boundary
                     this.y += 83;
                 break;
         }
 
         if (this.y === -15) { // -15px = water (player won)
-            this.x = 200;
-            this.y = 400;
+            this.reset();
         }
+    }
+
+    reset() {
+        this.x = 200;
+        this.y = 400; // bottom center of canvas
     }
 }
 

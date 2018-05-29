@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function() {
+const Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -32,11 +32,11 @@ Enemy.prototype.render = function() {
 class Player {
     constructor() {
         this.sprite = 'images/char-boy.png';
-        this.x = 0;
-        this.y = 0;
+        this.x = 200;
+        this.y = 400; // bottom center of canvas
     }
 
-    update() {
+    update(dt) {
 
     }
 
@@ -46,18 +46,28 @@ class Player {
 
     handleInput(dir) {
         switch (dir) {
+            // Note: px increases right and down
             case 'left':
-                this.x -= 50;
+                if (this.x != -2) // left boundary
+                    this.x -= 101; // block width = 101px
                 break;
             case 'up':
-                this.y -= 50;
+                // no upper boundary
+                this.y -= 83; // block height = 83px
                 break;
             case 'right':
-                this.x += 50;
+                if (this.x != 402) // right boundary
+                    this.x += 101;
                 break;
             case 'down':
-                this.y += 50;
+                if (this.y != 400) // lower boundary
+                    this.y += 83;
                 break;
+        }
+
+        if (this.y === -15) { // -15px = water (player won)
+            this.x = 200;
+            this.y = 400;
         }
     }
 }
@@ -72,7 +82,7 @@ let player = new Player();
 // Player.handleInput() method. You don't need to modify this.
 // Note: 'keydown' used instead 'keyup' for immediate player movement
 document.addEventListener('keydown', function(e) {
-    var allowedKeys = {
+    const allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',

@@ -1,3 +1,20 @@
 body {
     text-align: center;
 }
+
+canvas {
+	height: 90vh;
+	position: relative;
+}
+
+.score {
+	float: left;
+	margin-left: 10%;
+	width: 20%;
+}
+
+.hi-score {
+	float: right;
+	margin-right: 10%;
+	width: 20%;
+}

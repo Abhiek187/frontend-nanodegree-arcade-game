@@ -24,8 +24,17 @@ class Enemy {
                 enemy.reset();
 
             // Detect enemy collision
-            if (Math.abs(enemy.x - player.x) <= 67 && enemy.y === player.y)
+            if (Math.abs(enemy.x - player.x) <= 67 && enemy.y === player.y) {
+                if (score > hi_score) {
+                    hi_score = score;
+                    sessionStorage.setItem('score', hi_score);
+                    document.querySelector('.hi-score').textContent = `High Score: ${hi_score}`;
+                }
+
+                score = 0;
+                document.querySelector('.score').textContent = `Score: 0`;
                 player.reset();
+            }
         }
     }
 
@@ -92,8 +101,10 @@ class Player {
                 break;
         }
 
-        if (this.y === -15) // -15px = water (player won)
+        if (this.y === -15) { // -15px = water (player won)
+            document.querySelector('.score').textContent = `Score: ${++score}`;
             this.reset();
+        }
     }
 
     // Reset player position
@@ -108,6 +119,9 @@ class Player {
 // Place the player object in a variable called player
 const allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 const player = new Player();
+let score = 0;
+let hi_score = sessionStorage.getItem('score') || 0; // short-circuits to 0 if sessionStorage is null
+document.querySelector('.hi-score').textContent = `High Score: ${hi_score}`;
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

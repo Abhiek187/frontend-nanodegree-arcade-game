@@ -1,3 +1,4 @@
+'use strict';
 // Enemies our player must avoid
 class Enemy {
     constructor() {
@@ -16,25 +17,23 @@ class Enemy {
         // You should multiply any movement by the dt parameter
         // which will ensure the game runs at the same speed for
         // all computers.
-        for (const enemy of allEnemies) {
-            enemy.x += enemy.speed * dt;
+        this.x += this.speed * dt;
 
-            // Respawn enemy if out of bounds
-            if (enemy.x >= 503)
-                enemy.reset();
+        // Respawn enemy if out of bounds
+        if (this.x >= 503)
+            this.reset();
 
-            // Detect enemy collision
-            if (Math.abs(enemy.x - player.x) <= 67 && enemy.y === player.y) {
-                if (score > hi_score) {
-                    hi_score = score;
-                    sessionStorage.setItem('score', hi_score);
-                    document.querySelector('.hi-score').textContent = `High Score: ${hi_score}`;
-                }
-
-                score = 0;
-                document.querySelector('.score').textContent = `Score: 0`;
-                player.reset();
+        // Detect enemy collision
+        if (Math.abs(this.x - player.x) <= 67 && this.y === player.y) {
+            if (score > hiScore) {
+                hiScore = score;
+                sessionStorage.setItem('score', hiScore);
+                hiScoreDisplay.textContent = `High Score: ${hiScore}`;
             }
+
+            score = 0;
+            scoreDisplay.textContent = `Score: 0`;
+            player.reset();
         }
     }
 
@@ -58,7 +57,7 @@ class Enemy {
                     return 234;
             }
         })(); // execute function immediately and assign this.y to return value
-        this.speed = Math.random() * 100 + 50; // speed is a double
+        this.speed = Math.random() * 400 + 200; // speed is a double (min: 200, max: 599)
     }
 }
 
@@ -102,7 +101,7 @@ class Player {
         }
 
         if (this.y === -15) { // -15px = water (player won)
-            document.querySelector('.score').textContent = `Score: ${++score}`;
+            scoreDisplay.textContent = `Score: ${++score}`;
             this.reset();
         }
     }
@@ -120,8 +119,10 @@ class Player {
 const allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 const player = new Player();
 let score = 0;
-let hi_score = sessionStorage.getItem('score') || 0; // short-circuits to 0 if sessionStorage is null
-document.querySelector('.hi-score').textContent = `High Score: ${hi_score}`;
+const scoreDisplay = document.querySelector('.score');
+let hiScore = sessionStorage.getItem('score') || 0; // short-circuits to 0 if sessionStorage is null
+const hiScoreDisplay = document.querySelector('.hi-score');
+hiScoreDisplay.textContent = `High Score: ${hiScore}`;
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

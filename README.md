@@ -4,7 +4,7 @@ This is a clone of the game Frogger coded using object-oriented JavaScript and a
 
 ## Getting Started
 
-You can play the game [here](https://abhiek187.github.io/frontend-nanodegree-arcade-game).
+You can play the game [here](https://abhiek187.github.io/frontend-nanodegree-arcade-game). To run this game locally, clone or download the game using this [link](https://github.com/Abhiek187/frontend-nanodegree-arcade-game.git) and run **index.html** on any browser.
 
 ## How to Play
 
